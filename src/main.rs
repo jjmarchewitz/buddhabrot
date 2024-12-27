@@ -1,28 +1,17 @@
-use pixel_canvas::{input::MouseState, Canvas, Color};
+use image::ImageBuffer;
 
-const WIDTH: usize = 512;
-const HEIGHT: usize = 512;
+const WIDTH: u32 = 10000;
+const HEIGHT: u32 = 10000;
 
 fn main() {
-    let canvas = Canvas::new(WIDTH, HEIGHT)
-        .title("Buddhabrot")
-        .state(MouseState::new())
-        .input(MouseState::handle_input);
+    let mut imgbuf: ImageBuffer<image::Rgb<u8>, Vec<u8>> = ImageBuffer::new(WIDTH, HEIGHT);
 
-    canvas.render(|mouse, image| {
-        // Modify the `image` based on your state.
-        let width = image.width() as usize;
-        for (y, row) in image.chunks_mut(width).enumerate() {
-            for (x, pixel) in row.iter_mut().enumerate() {
-                let dx = x as i32 - mouse.x;
-                let dy = y as i32 - mouse.y;
-                let dist = dx * dx + dy * dy;
-                *pixel = Color {
-                    r: if dist < 128 * 128 { dy as u8 } else { 0 },
-                    g: if dist < 128 * 128 { dx as u8 } else { 0 },
-                    b: (x * y) as u8,
-                }
-            }
-        }
-    });
+    for (x, y, pixel) in imgbuf.enumerate_pixels_mut() {
+        let r = (0.3 * x as f32) as u8;
+        let b = (0.3 * y as f32) as u8;
+        *pixel = image::Rgb([r, 0, b]);
+    }
+
+    // Save the image as “fractal.png”, the format is deduced from the path
+    imgbuf.save("fractal.png").unwrap();
 }
