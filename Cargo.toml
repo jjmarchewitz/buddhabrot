@@ -1,0 +1,8 @@
+[package]
+name = "buddhabrot"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+num = "0.4.3"
+pixel-canvas = "0.2.3"
